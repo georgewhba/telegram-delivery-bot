@@ -1,0 +1,46 @@
+{
+  "name": "telegram-delivery-bot",
+  "version": "1.0.0",
+  "description": "Telegram Auto-Delivery Bot with Web Admin Dashboard",
+  "private": true,
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "dev:dash": "npm --prefix dashboard run dev",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "tsx src/db/migrate.ts",
+    "db:seed": "tsx src/db/seed.ts",
+    "build": "tsup src/index.ts --format cjs --out-dir dist --clean && npm --prefix dashboard run build",
+    "start": "pm2 start scripts/ecosystem.config.js",
+    "stop": "pm2 stop scripts/ecosystem.config.js",
+    "logs": "pm2 logs delivery-bot",
+    "backup": "bash scripts/backup.sh"
+  },
+  "dependencies": {
+    "grammy": "^1.28.0",
+    "@grammyjs/conversations": "^1.2.0",
+    "better-sqlite3": "^11.3.0",
+    "drizzle-orm": "^0.33.0",
+    "express": "^4.19.2",
+    "cors": "^2.8.5",
+    "jsonwebtoken": "^9.0.2",
+    "bcrypt": "^5.1.1",
+    "zod": "^3.23.8",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4",
+    "tsx": "^4.19.0",
+    "tsup": "^8.2.4",
+    "drizzle-kit": "^0.24.2",
+    "@types/express": "^4.17.21",
+    "@types/cors": "^2.8.17",
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/bcrypt": "^5.0.2",
+    "@types/better-sqlite3": "^7.6.11",
+    "@types/node": "^22.5.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
