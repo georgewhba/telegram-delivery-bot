@@ -1,126 +1,90 @@
-# 🤖 بوت التسليم التلقائي عبر تيليجرام
+<div align="center">
+  <h1>🤖 Telegram Delivery Bot</h1>
+  <p><strong>A fully automated Telegram bot for selling and delivering digital products (Keys, Files, Links, Accounts) with a built-in React Web Dashboard.</strong></p>
+</div>
 
-بوت تيليجرام لبيع وتسليم المنتجات الرقمية (أكواد، ملفات، روابط، حسابات) تلقائيًا، مع لوحة تحكم ويب كاملة للإدارة.
+<hr />
 
-## المكونات
+## 📖 نظرة عامة (Overview)
 
-| الطبقة | التقنية |
-|---|---|
-| البوت | [grammy](https://grammy.dev) + `@grammyjs/conversations` |
-| قاعدة البيانات | SQLite عبر `better-sqlite3` |
-| ORM | Drizzle ORM |
-| API | Express.js + JWT |
-| لوحة التحكم | React 18 + Vite (بدون Tailwind — CSS مخصص) |
+بوت تيليجرام متكامل لبيع وتسليم المنتجات الرقمية تلقائياً. يحتوي على لوحة تحكم ويب شاملة لإدارة المنتجات، الأقسام، الإحصائيات، ومراقبة المخزون بسهولة تامة، بالإضافة إلى واجهة إدارة مصغرة داخل تيليجرام نفسه.
 
-## البنية
+## ✨ المميزات (Features)
 
-```
-src/
-  bot/        ← منطق بوت تيليجرام (handlers, keyboards, conversations)
-  api/        ← Express API للوحة التحكم
-  db/         ← Drizzle schema + migrations + seed
-  services/   ← منطق الأعمال المشترك بين البوت والـ API
-dashboard/    ← لوحة تحكم React (SPA)
-scripts/      ← PM2 config + سكريبت النسخ الاحتياطي
-nginx/        ← إعداد Nginx كـ reverse proxy
-```
+- **تسليم فوري وآمن:** نظام ذكي لمنع التكرار (Atomic Updates) يضمن عدم تسليم نفس المنتج لشخصين في نفس الوقت.
+- **لوحة تحكم ويب:** واجهة حديثة وسريعة (React 18 + Vite) لإدارة كل شيء.
+- **إدارة من داخل تيليجرام:** واجهة (Admin Panel) داخل البوت لإضافة المنتجات، إرسال رسائل جماعية، والاطلاع على المخزون.
+- **أنواع منتجات متعددة:** يدعم تسليم الأكواد، الروابط، الحسابات، وحتى الملفات (عبر `file_id` الخاص بتيليجرام بدون استهلاك مساحة التخزين).
+- **إحصائيات دقيقة:** تتبع المبيعات، المنتجات المتبقية، وعدد المستخدمين.
 
-## البدء السريع (تطوير محلي)
+## 🛠 التقنيات المستخدمة (Tech Stack)
 
-### 1. المتطلبات
+- **البوت:** [grammy.dev](https://grammy.dev)
+- **واجهة الويب (Dashboard):** React 18, Vite
+- **الخادم (Backend):** Node.js, Express.js
+- **قاعدة البيانات:** SQLite (via `better-sqlite3`), Drizzle ORM
+
+---
+
+## 🚀 طريقة التشغيل (Getting Started)
+
+### 1. المتطلبات (Requirements)
 - Node.js 20+
-- بوت تيليجرام (احصل على `BOT_TOKEN` من [@BotFather](https://t.me/BotFather))
-- معرّف تيليجرام الخاص بك كأدمن (احصل عليه من [@userinfobot](https://t.me/userinfobot))
+- توكن البوت `BOT_TOKEN` من [@BotFather](https://t.me/BotFather)
+- المعرّف الخاص بك `ADMIN_TELEGRAM_IDS` من [@userinfobot](https://t.me/userinfobot)
 
-### 2. التثبيت
-
+### 2. التثبيت (Installation)
+قم بنسخ المشروع وتثبيت الحزم المطلوبة:
 ```bash
-# الباك إند
+# تثبيت حزم البوت والخادم
 npm install
 
-# لوحة التحكم
+# تثبيت حزم لوحة التحكم
 npm --prefix dashboard install
 ```
 
-### 3. الإعدادات
-
-انسخ `.env.example` إلى `.env` واملأ القيم:
-
+### 3. الإعدادات (Configuration)
+انسخ ملف `.env.example` إلى `.env` وقم بتعديل القيم بداخله لتناسب إعداداتك:
 ```bash
 cp .env.example .env
 ```
 
+مثال لمحتوى ملف `.env`:
 ```env
-BOT_TOKEN=...                       # من BotFather
-ADMIN_TELEGRAM_IDS=123456789        # معرّفك على تيليجرام (يمكن أكثر من واحد مفصولين بفاصلة)
+BOT_TOKEN=your_telegram_bot_token_here
+ADMIN_TELEGRAM_IDS=123456789
 DATABASE_PATH=./data/bot.db
 PORT=3000
-JWT_SECRET=...                      # نص عشوائي طويل
-ADMIN_USERNAME=admin                # يوزرنيم لوحة التحكم
-ADMIN_PASSWORD=...                  # باسورد قوي للوحة التحكم
+JWT_SECRET=a_very_long_random_secret_key
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=strong_password
 DASHBOARD_ORIGIN=http://localhost:5173
 ```
 
-### 4. قاعدة البيانات
-
+### 4. تجهيز قاعدة البيانات (Database Setup)
 ```bash
-npm run db:generate   # توليد ملفات الـ migration من الـ schema
-npm run db:migrate    # تطبيقها على قاعدة البيانات
-npm run db:seed       # إنشاء حساب الأدمن + بيانات تجريبية (اختياري)
+npm run db:generate   # إنشاء ملفات التهيئة (Migrations)
+npm run db:migrate    # تطبيق التهيئة على قاعدة البيانات
+npm run db:seed       # إضافة الحساب الأساسي للمشرف (اختياري)
 ```
 
-### 5. التشغيل في وضع التطوير
-
-في نافذتين طرفيتين منفصلتين:
-
+### 5. التشغيل (Run)
+لتشغيل المشروع في بيئة التطوير المحلية (نافذتين منفصلتين):
 ```bash
-npm run dev        # يشغّل البوت + الـ API على المنفذ 3000
-npm run dev:dash   # يشغّل لوحة التحكم على المنفذ 5173 (بها proxy تلقائي لـ /api)
+# Terminal 1: تشغيل البوت وواجهة الـ API
+npm run dev
+
+# Terminal 2: تشغيل لوحة التحكم
+npm run dev:dash
 ```
+يمكنك الآن زيارة لوحة التحكم عبر [http://localhost:5173](http://localhost:5173).
 
-افتح البوت على تيليجرام وابدأ بـ `/start`، وافتح `http://localhost:5173` للوحة التحكم.
+---
 
-## البناء والتشغيل في الإنتاج
+## 🔒 ملاحظات الأمان (Security)
+- لا تشارك ملف `.env` أبداً.
+- تأكد من تغيير `JWT_SECRET` و `ADMIN_PASSWORD` قبل رفع المشروع للإنتاج.
+- يتم تخزين كلمات المرور بشكل مشفر باستخدام (bcrypt).
 
-```bash
-npm run build   # يبني الباك إند (tsup) + لوحة التحكم (vite build)
-npm run start   # يشغّل عبر PM2 (يقرأ scripts/ecosystem.config.js)
-npm run logs    # لعرض اللوجات
-npm run stop    # لإيقاف الخدمة
-```
-
-في الإنتاج، سيرفر Express نفسه (على `PORT`) يقدّم كلًا من الـ API وملفات لوحة التحكم المبنية من `dashboard/dist` — فلا حاجة لسيرفر منفصل للفرونت إند.
-
-### Nginx
-
-عدّل `your-domain.com` في `nginx/bot.conf` ثم فعّله:
-
-```bash
-sudo cp nginx/bot.conf /etc/nginx/sites-available/delivery-bot
-sudo ln -s /etc/nginx/sites-available/delivery-bot /etc/nginx/sites-enabled/
-sudo nginx -t && sudo systemctl reload nginx
-```
-
-استخدم `certbot` لإضافة HTTPS بعد ذلك.
-
-### النسخ الاحتياطي
-
-```bash
-npm run backup   # أو أضفه في crontab للتشغيل يوميًا
-```
-
-يحتفظ السكريبت بآخر 30 نسخة تلقائيًا في `/backups/delivery-bot` (قابل للتغيير عبر `BACKUP_DIR`).
-
-## استخدام البوت
-
-- **العملاء:** `/start` لعرض القائمة الرئيسية — تصفح المنتجات، بحث، عرض الطلبات السابقة.
-- **الأدمن** (لمن كان معرّفه ضمن `ADMIN_TELEGRAM_IDS`): `/admin` لفتح لوحة التحكم داخل تيليجرام — إضافة منتج، استيراد بالجملة، رسالة جماعية، عرض المخزون والإحصائيات.
-
-جميع عمليات إدارة الأقسام والمنتجات والمستخدمين والتسليمات بالتفصيل متاحة أيضًا (وبشكل أكمل) من خلال لوحة التحكم على الويب.
-
-## ملاحظات تقنية مهمة
-
-- **تسليم آمن من التكرار:** عند الضغط على "استلام المنتج"، يتم الاستيلاء على المنتج عبر `UPDATE` شرطي ذري (`isDelivered = false`) بحيث لا يمكن لمستخدمين اثنين الحصول على نفس المنتج حتى مع الضغط في نفس اللحظة.
-- **الملفات:** لا يتم تخزين أي ملفات على القرص — يُستخدم `file_id` الخاص بتيليجرام، ويُحفظ في عمود `content` بنفس طريقة الكود/الرابط.
-- **الحسابات (`content_type = account`):** هذا القالب يدعم تسليم بيانات دخول (يوزر:باسورد) كنوع محتوى عام لأي غرض تحدده أنت. تأكد أن ما تبيعه متوافق مع شروط خدمة أي طرف ثالث ومع القوانين المعمول بها — هذا يقع ضمن مسؤوليتك كمشغّل للبوت وليس جزءًا من هذا الكود.
-- **الأمان:** كلمة مرور الأدمن مشفّرة بـ bcrypt (12 rounds)، الـ JWT صالح 24 ساعة، ومحاولات تسجيل الدخول محدودة (5 محاولات/دقيقة).
+## 📄 الترخيص (License)
+هذا المشروع مفتوح المصدر ومتاح للاستخدام والتعديل.
